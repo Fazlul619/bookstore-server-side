@@ -27,13 +27,24 @@ async function run() {
     const bookCollection = client
       .db("bookstoreDB")
       .collection("booksCollection");
+    const authorCollection = client
+      .db("bookstoreDB")
+      .collection("authorsCollection");
 
-    // subscriber api
+    // books post api
     app.post("/book-collection-post-api", async (req, res) => {
       const bookData = req.body;
       const result = await bookCollection.insertOne(bookData);
       res.send(result);
     });
+
+    //authors post api
+    app.post("/author-collection-post-api", async (req, res) => {
+      const authorData = req.body;
+      const result = await authorCollection.insertOne(authorData);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
