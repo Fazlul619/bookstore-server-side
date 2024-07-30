@@ -66,7 +66,7 @@ async function run() {
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const updateBookData = req.body;
-      const food = {
+      const book = {
         $set: {
           bookName: updateBookData.bookName,
           bookImage: updateBookData.bookImage,
@@ -75,7 +75,7 @@ async function run() {
           authorName: updateBookData.authorName,
         },
       };
-      const result = await bookCollection.updateOne(filter, food, options);
+      const result = await bookCollection.updateOne(filter, book, options);
       res.send(result);
     });
 
@@ -107,7 +107,41 @@ async function run() {
       const result = await authorCollection.findOne(query);
       res.send(result);
     });
+    // get author data for a specific user
+    app.get("/allAuthors-get-api", async (req, res) => {
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await authorCollection.find().toArray();
+      res.send(result);
+    });
+    // Delete an author api
 
+    app.delete("/author-delete-api/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await authorCollection.deleteOne(query);
+      res.send(result);
+    });
+    // Update An Author Api
+    app.put("/author-update-api/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateAnAuthorData = req.body;
+      const author = {
+        $set: {
+          authorName: updateAnAuthorData.authorName,
+          authorImage: updateAnAuthorData.authorImage,
+          description: updateAnAuthorData.description,
+          bio: updateAnAuthorData.bio,
+          birthDate: updateAnAuthorData.birthDate,
+        },
+      };
+      const result = await authorCollection.updateOne(filter, author, options);
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
