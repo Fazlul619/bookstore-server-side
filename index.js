@@ -37,11 +37,36 @@ async function run() {
       const result = await bookCollection.insertOne(bookData);
       res.send(result);
     });
-
+    // all books get api
+    app.get("/allBooks-get-api", async (req, res) => {
+      const cursor = bookCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get a single book api
+    app.get("/allBooks-get-api/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookCollection.findOne(query);
+      res.send(result);
+    });
     //authors post api
     app.post("/author-collection-post-api", async (req, res) => {
       const authorData = req.body;
       const result = await authorCollection.insertOne(authorData);
+      res.send(result);
+    });
+    // all authors get api
+    app.get("/allAuthors-get-api", async (req, res) => {
+      const cursor = authorCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get a single author api
+    app.get("/allAuthors-get-api/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await authorCollection.findOne(query);
       res.send(result);
     });
 
