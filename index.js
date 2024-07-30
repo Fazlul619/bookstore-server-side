@@ -50,6 +50,44 @@ async function run() {
       const result = await bookCollection.findOne(query);
       res.send(result);
     });
+    // get books data for a specific user
+    app.get("/allBooks-get-api", async (req, res) => {
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await bookCollection.find().toArray();
+      res.send(result);
+    });
+    // Update a Book
+    // Food updated
+    app.put("/book-update-api/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateBookData = req.body;
+      const food = {
+        $set: {
+          bookName: updateBookData.bookName,
+          bookImage: updateBookData.bookImage,
+          description: updateBookData.description,
+          publishedDate: updateBookData.publishedDate,
+          authorName: updateBookData.authorName,
+        },
+      };
+      const result = await bookCollection.updateOne(filter, food, options);
+      res.send(result);
+    });
+
+    // Delete a book api
+
+    app.delete("/book-delete-api/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookCollection.deleteOne(query);
+      res.send(result);
+    });
+
     //authors post api
     app.post("/author-collection-post-api", async (req, res) => {
       const authorData = req.body;
